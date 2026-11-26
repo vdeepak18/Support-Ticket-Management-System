@@ -17,7 +17,7 @@ function CreateTicket() {
     setBusy(true);
     try {
       const res = await api.post('/api/tickets', form);
-      navigate(`/tickets/${res.data.data.ticket._id}`);
+      navigate(`/tickets/${res.data.data.ticket.id}`);
     } catch (err) {
       setError(errMsg(err, 'Could not create the ticket'));
       setBusy(false);

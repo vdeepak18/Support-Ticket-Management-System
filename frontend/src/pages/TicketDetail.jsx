@@ -39,7 +39,7 @@ function TicketDetail() {
   if (!ticket) return <p className="text-sm text-gray-500">Loading ticket...</p>;
 
   // Only the owner sees Edit/Delete (the backend enforces this too)
-  const isOwner = (ticket.createdBy?._id || ticket.createdBy) === user.id;
+  const isOwner = String(ticket.createdBy?.id || ticket.createdBy) === String(user.id);
 
   const startEdit = () => {
     setForm({ title: ticket.title, description: ticket.description, category: ticket.category, priority: ticket.priority });
@@ -124,7 +124,7 @@ function TicketDetail() {
         <h2 className="text-lg font-semibold text-gray-900 mb-3">Comments ({comments.length})</h2>
         {comments.length === 0 && <p className="text-sm text-gray-500">No comments yet.</p>}
         {comments.map((c) => (
-          <div key={c._id} className="py-3 border-b border-gray-200 text-sm">
+          <div key={c.id} className="py-3 border-b border-gray-200 text-sm">
             <p><span className="font-medium text-gray-900">{c.user?.name || 'User'}</span> <span className="text-gray-500">{fmt(c.createdAt)}</span></p>
             <p className="text-gray-700 whitespace-pre-wrap">{c.message}</p>
           </div>
@@ -139,7 +139,7 @@ function TicketDetail() {
         <h2 className="text-lg font-semibold text-gray-900 mb-3">Activity</h2>
         {activity.length === 0 && <p className="text-sm text-gray-500">No activity yet.</p>}
         {activity.map((a) => (
-          <p key={a._id} className="py-2 border-b border-gray-200 last:border-0 text-sm text-gray-700">
+          <p key={a.id} className="py-2 border-b border-gray-200 last:border-0 text-sm text-gray-700">
             <span className="font-medium text-gray-900">{a.user?.name || 'User'}</span> {a.details || a.action.replace(/_/g, ' ')}{' '}
             <span className="text-gray-500">{new Date(a.createdAt).toLocaleString()}</span>
           </p>

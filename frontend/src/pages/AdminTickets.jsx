@@ -37,20 +37,20 @@ function AdminTickets() {
           </thead>
           <tbody>
             {tickets.map((t) => (
-              <tr key={t._id} className="border-b border-gray-200 last:border-0">
+              <tr key={t.id} className="border-b border-gray-200 last:border-0">
                 <td className="px-3 py-3 text-gray-900">{t.title}</td>
                 <td className="px-3 py-3 text-gray-500">{t.createdBy?.name || '-'}</td>
                 <td className="px-3 py-3">
-                  <select aria-label="Status" value={t.status} onChange={(e) => update(t._id, 'status', e.target.value)} className={small}>
+                  <select aria-label="Status" value={t.status} onChange={(e) => update(t.id, 'status', e.target.value)} className={small}>
                     <option value="open">Open</option><option value="in-progress">In progress</option><option value="resolved">Resolved</option><option value="closed">Closed</option>
                   </select>
                 </td>
                 <td className="px-3 py-3">
-                  <select aria-label="Priority" value={t.priority} onChange={(e) => update(t._id, 'priority', e.target.value)} className={small}>
+                  <select aria-label="Priority" value={t.priority} onChange={(e) => update(t.id, 'priority', e.target.value)} className={small}>
                     <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option>
                   </select>
                 </td>
-                <td className="px-3 py-3"><Link to={`/tickets/${t._id}`} className="text-gray-900 hover:underline">View</Link></td>
+                <td className="px-3 py-3"><Link to={`/tickets/${t.id}`} className="text-gray-900 hover:underline">View</Link></td>
               </tr>
             ))}
           </tbody>

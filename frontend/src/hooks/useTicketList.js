@@ -13,7 +13,10 @@ function useTicketList(url) {
     setLoading(true);
     const params = { page, limit: 10, ...Object.fromEntries(Object.entries(filters).filter(([, v]) => v)) };
     api.get(url, { params })
-      .then((res) => setData(res.data.data))
+      .then((res) => {
+        const result = res.data.data;
+        setData({ ...result, pages: result.pagination?.pages ?? result.pages ?? 1 });
+      })
       .catch((e) => setError(errMsg(e, 'Could not load tickets')))
       .finally(() => setLoading(false));
   };

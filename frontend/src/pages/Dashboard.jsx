@@ -15,7 +15,7 @@ function Dashboard() {
   // Three small requests: only the "total" of each is used
   useEffect(() => {
     Promise.all(['', 'open', 'resolved'].map((status) => api.get('/api/tickets', { params: { limit: 1, status: status || undefined } })))
-      .then((res) => setStats(res.map((r) => r.data.data.total)))
+      .then((res) => setStats(res.map((r) => r.data.data.pagination.total)))
       .catch(() => {});
   }, []);
 
@@ -42,8 +42,8 @@ function Dashboard() {
           </thead>
           <tbody>
             {tickets.map((t) => (
-              <tr key={t._id} className="border-b border-gray-200 last:border-0">
-                <td className="px-3 py-3"><Link to={`/tickets/${t._id}`} className="text-gray-900 hover:underline">{t.title}</Link></td>
+              <tr key={t.id} className="border-b border-gray-200 last:border-0">
+                <td className="px-3 py-3"><Link to={`/tickets/${t.id}`} className="text-gray-900 hover:underline">{t.title}</Link></td>
                 <td className="px-3 py-3"><Badge value={t.status} /></td>
                 <td className="px-3 py-3"><Badge value={t.priority} /></td>
                 <td className="px-3 py-3 text-gray-500">{fmt(t.createdAt)}</td>
