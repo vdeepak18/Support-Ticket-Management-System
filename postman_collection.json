@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Support Ticket Management API",
-    "description": "Import into Postman. Set token using Register/Login or paste an admin JWT after running the seed script.",
+    "description": "Import into Postman. Start with Register or Login to save a user JWT in the collection variable. Create ticket saves ticketId for follow-up requests; run Delete ticket only after requests using that ticket. Admin requests require replacing token with a JWT for an administrator created by backend/seedAdmin.js.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
