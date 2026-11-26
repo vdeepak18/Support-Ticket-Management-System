@@ -11,8 +11,10 @@ export default function CreateTicket() {
     event.preventDefault(); setBusy(true); setError('');
     try {
       const response = await api.post('/tickets', form);
-      navigate(`/tickets/${response.data.data.ticket.id}`, { state: { message: 'Ticket created successfully.' } });
-    } catch (err) { setError(err.response?.data?.message || 'Could not create the ticket.'); }
+      const ticketId = response.data.data.ticket.id ?? response.data.data.ticket._id;
+      if (ticketId == null) throw new Error('The server did not return a ticket ID. Refresh and try again.');
+      navigate(`/tickets/${ticketId}`, { state: { message: 'Ticket created successfully.' } });
+    } catch (err) { setError(err.response?.data?.message || err.message || 'Could not create the ticket.'); }
     finally { setBusy(false); }
   }
   return <div className="max-w-2xl"><Link to="/" className="mb-6 inline-block text-xs text-slate-500 hover:text-green-700">← Back to my tickets</Link><p className="eyebrow">NEW REQUEST</p><h1 className="page-title">How can we help<span className="text-pista">?</span></h1><p className="mb-6 mt-2 text-sm text-slate-500">Share a few details and our team will take it from here.</p>

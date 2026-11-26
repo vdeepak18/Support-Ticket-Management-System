@@ -12,7 +12,7 @@ export default function Login() {
   async function submit(event) {
     event.preventDefault(); setBusy(true); setError('');
     try { const account = await login(form); navigate(account.role === 'admin' ? '/admin' : '/'); }
-    catch (err) { setError(err.response?.data?.message || 'Could not sign in. Check that the API is running.'); }
+    catch (err) { setError(err.response?.status === 401 ? 'Email or password is incorrect. Accounts from the old MongoDB database were not copied to PostgreSQL; register again. Admin accounts must be created with npm run seed:admin.' : err.response?.data?.message || 'Could not sign in. Check that the API is running.'); }
     finally { setBusy(false); }
   }
   return <AuthCard title="Welcome back" subtitle="Sign in to see your support requests."><form onSubmit={submit} className="space-y-4"><Field label="Email"><input className="input" type="email" required autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" /></Field><Field label="Password"><input className="input" type="password" required autoComplete="current-password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="Your password" /></Field>{error && <p className="error">{error}</p>}<button disabled={busy} className="button w-full">{busy ? 'Signing in…' : 'Sign in'} →</button></form><p className="mt-5 text-center text-xs text-slate-500">New here? <Link className="font-semibold text-green-700" to="/register">Create an account</Link></p></AuthCard>;

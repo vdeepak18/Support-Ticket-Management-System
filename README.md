@@ -43,9 +43,7 @@ npm run dev
 
 Open the Vite URL, normally `http://localhost:5173`. Set `VITE_API_URL` if the backend is hosted elsewhere. Set `CLIENT_URL` in the backend environment to the frontend origin.
 
-## Render PostgreSQL
 
-For the deployed API, use the database's **internal URL** when the API and database are in the same Render workspace and region. For local development, use the **external URL** and keep `sslmode=require` in its query string. The backend reads that setting and enables TLS for `pg`. Keep the full URL in `DATABASE_URL`; never commit it. Render documents the URL locations and connection requirements in its [PostgreSQL connection guide](https://render.com/docs/postgresql-creating-connecting).
 
 ## API endpoints
 

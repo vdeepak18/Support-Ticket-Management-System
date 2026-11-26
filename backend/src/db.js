@@ -8,10 +8,11 @@ function createPool() {
   if (databaseUrl) {
     const url = new URL(databaseUrl);
     const sslMode = url.searchParams.get('sslmode');
+    const isRenderExternalUrl = url.hostname.endsWith('.render.com');
     url.searchParams.delete('sslmode');
     connectionString = url.toString();
-    if (sslMode === 'require' || process.env.DATABASE_SSL === 'true') ssl = true;
-    if (sslMode === 'disable') ssl = false;
+    if (sslMode === 'disable' && !isRenderExternalUrl) ssl = false;
+    else if (sslMode === 'require' || process.env.DATABASE_SSL === 'true' || isRenderExternalUrl) ssl = true;
   }
 
   const pool = new Pool({ connectionString, ssl, max: 10 });
