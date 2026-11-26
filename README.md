@@ -41,7 +41,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Open the Vite URL, normally `http://localhost:5173`. Set `VITE_API_URL` if the backend is hosted elsewhere. Set `CLIENT_URL` in the backend environment to the frontend origin.
+Open the Vite URL, normally `http://localhost:5173`. Set `VITE_API_URL` to the backend API root, including `/api` (for example, `https://your-service.onrender.com/api`). Set `CLIENT_URL` in the backend environment to the frontend origin without a trailing slash.
 
 
 
