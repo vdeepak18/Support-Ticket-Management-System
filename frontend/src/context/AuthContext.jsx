@@ -1,38 +1,34 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import api from '../api/axios';
 
 const AuthContext = createContext(null);
+const useAuth = () => useContext(AuthContext);
 
-export function AuthProvider({ children }) {
-  const [token, setToken] = useState(localStorage.getItem('support-token'));
+function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(Boolean(token));
+  const [loading, setLoading] = useState(true);
 
+  // On load, use the saved token to fetch the current user
   useEffect(() => {
-    if (!token) return;
-    api.get('/auth/me')
-      .then((response) => setUser(response.data.data.user))
-      .catch(() => { localStorage.removeItem('support-token'); setToken(null); })
+    if (!localStorage.getItem('token')) return setLoading(false);
+    api.get('/api/auth/me')
+      .then((res) => setUser(res.data.data.user))
+      .catch(() => localStorage.removeItem('token'))
       .finally(() => setLoading(false));
   }, []);
 
-  async function saveSession(path, details) {
-    const response = await api.post(path, details);
-    const nextToken = response.data.data.token;
-    localStorage.setItem('support-token', nextToken);
-    setToken(nextToken);
-    setUser(response.data.data.user);
-    return response.data.data.user;
-  }
-
-  function logout() {
-    localStorage.removeItem('support-token');
-    setToken(null);
+  const saveSession = (data) => {
+    localStorage.setItem('token', data.token);
+    setUser(data.user);
+  };
+  const login = async (email, password) => saveSession((await api.post('/api/auth/login', { email, password })).data.data);
+  const register = async (name, email, password) => saveSession((await api.post('/api/auth/register', { name, email, password })).data.data);
+  const logout = () => {
+    localStorage.removeItem('token');
     setUser(null);
-  }
+  };
 
-  const value = useMemo(() => ({ user, token, loading, logout, login: (details) => saveSession('/auth/login', details), register: (details) => saveSession('/auth/register', details) }), [user, token, loading]);
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, loading, login, register, logout }}>{children}</AuthContext.Provider>;
 }
 
-export const useAuth = () => useContext(AuthContext);
+export { AuthProvider, useAuth };

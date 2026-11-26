@@ -1,11 +1,37 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../api/axios';
-
-export default function AdminDashboard() {
+import { errMsg } from '../utils';
+import StatCard from '../components/StatCard';
+function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [error, setError] = useState('');
-  useEffect(() => { api.get('/admin/stats').then((response) => setStats(response.data.data)).catch((err) => setError(err.response?.data?.message || 'Could not load statistics.')); }, []);
-  return <><div className="mb-7"><p className="eyebrow">SUPPORT DESK</p><h1 className="page-title">Admin dashboard<span className="text-pista">.</span></h1><p className="mt-2 text-sm text-slate-500">A quick view of every customer request.</p></div>{error && <p className="error">{error}</p>}{!stats ? <p className="text-sm text-slate-500">Loading statistics…</p> : <><div className="mb-6 grid gap-3 sm:grid-cols-3"><Stat label="Total tickets" value={stats.total} /><Stat label="Open" value={stats.byStatus.open || 0} /><Stat label="In progress" value={stats.byStatus['in-progress'] || 0} /></div><div className="mb-6 grid gap-3 sm:grid-cols-3"><Stat label="Resolved" value={stats.byStatus.resolved || 0} /><Stat label="Closed" value={stats.byStatus.closed || 0} /><Stat label="High priority" value={stats.byPriority.high || 0} /></div><div className="card flex flex-wrap items-center justify-between gap-4 p-6"><div><h2 className="font-bold text-slate-800">Manage ticket queue</h2><p className="mt-1 text-xs text-slate-500">Search tickets and update their status or priority.</p></div><Link to="/admin/tickets" className="button">Open all tickets →</Link></div></>}</>;
+  useEffect(() => {
+    api.get('/api/admin/stats').then((r) => setStats(r.data.data)).catch((e) => setError(errMsg(e, 'Could not load stats')));
+  }, []);
+
+  if (error) return <p className="text-sm text-red-600">{error}</p>;
+  if (!stats) return <p className="text-sm text-gray-500">Loading stats...</p>;
+  const by = (obj, key) => obj?.[key] ?? 0;
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-semibold text-gray-900">Admin dashboard</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard label="Total" value={stats.total} />
+        <StatCard label="Open" value={by(stats.byStatus, 'open')} />
+        <StatCard label="In progress" value={by(stats.byStatus, 'in-progress')} />
+        <StatCard label="Resolved" value={by(stats.byStatus, 'resolved')} />
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">By priority</h2>
+        <div className="grid grid-cols-3 gap-4">
+          <StatCard label="High" value={by(stats.byPriority, 'high')} />
+          <StatCard label="Medium" value={by(stats.byPriority, 'medium')} />
+          <StatCard label="Low" value={by(stats.byPriority, 'low')} />
+        </div>
+      </div>
+    </div>
+  );
 }
-function Stat({ label, value }) { return <div className="card p-5"><p className="text-xs text-slate-500">{label}</p><strong className="mt-2 block text-3xl text-slate-800">{value}</strong></div>; }
+
+export default AdminDashboard;
