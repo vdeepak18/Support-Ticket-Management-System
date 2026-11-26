@@ -30,9 +30,9 @@ function Register() {
   return (
     <AuthCard title="Create account" footer={<>Have an account? <Link to="/login" className="text-gray-900 underline">Log in</Link></>}>
       <form onSubmit={submit} className="mt-6 space-y-4">
-        <Field label="Name"><input name="name" required value={form.name} onChange={change} className={input} /></Field>
-        <Field label="Email"><input name="email" type="email" required value={form.email} onChange={change} className={input} /></Field>
-        <Field label="Password"><input name="password" type="password" minLength={6} required value={form.password} onChange={change} className={input} /></Field>
+        <Field label="Name"><input name="name" autoComplete="name" required value={form.name} onChange={change} className={input} /></Field>
+        <Field label="Email"><input name="email" type="email" autoComplete="email" required value={form.email} onChange={change} className={input} /></Field>
+        <Field label="Password"><input name="password" type="password" autoComplete="new-password" minLength={6} required value={form.password} onChange={change} className={input} /></Field>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button disabled={busy} className={`${btnPrimary} w-full`}>{busy ? 'Creating account...' : 'Create account'}</button>
       </form>

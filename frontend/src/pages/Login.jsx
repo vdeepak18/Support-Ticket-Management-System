@@ -30,8 +30,8 @@ function Login() {
   return (
     <AuthCard title="Log in" footer={<>No account? <Link to="/register" className="text-gray-900 underline">Register</Link></>}>
       <form onSubmit={submit} className="mt-6 space-y-4">
-        <Field label="Email"><input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={input} /></Field>
-        <Field label="Password"><input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className={input} /></Field>
+        <Field label="Email"><input type="email" autoComplete="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={input} /></Field>
+        <Field label="Password"><input type="password" autoComplete="current-password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className={input} /></Field>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button disabled={busy} className={`${btnPrimary} w-full`}>{busy ? 'Logging in...' : 'Log in'}</button>
       </form>
